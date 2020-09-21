@@ -67,22 +67,23 @@ def battleSleep(x,part=.1):
         time.sleep(part)
     time.sleep(max(0,timer+part-time.time()))
 class Fuse:
-    def __init__(self,fv=400,show=1):
+    def __init__(self,fv=400,show=1,name=''):
         self.__value=0
         self.__max=fv
         self.show=show
+        self.name=name
     @property
     def value(self):return self.__value
     @property
     def max(self):return self.__max
     def inc(self):
         if self.__value>self.__max:
-            logger.warning('Fused')
+            logger.warning(f'Fused {self.name}')
             exit(0)
         self.__value+=1
         return self
     def reset(self):
-        if self.__value>self.show:logger.debug(f'Fuse {self.__value}')
+        if self.__value>self.show:logger.debug(f'Fuse {self.name} {self.__value}')
         self.__value=0
         return self
 fuse=Fuse()
@@ -221,6 +222,7 @@ class Base(Android):
     def snapshot(self):return cv2.resize(super().snapshot()[self.render[1]+self.border[1]:self.render[1]+self.render[3]-self.border[1],self.render[0]+self.border[0]:self.render[0]+self.render[2]-self.border[0]],(1920,1080),interpolation=cv2.INTER_CUBIC)
 base=Base()
 def doit(pos,wait):[(base.press(i),battleSleep(j*.001))for i,j in zip(pos,wait)]
+check=None
 class Check:
     def __init__(self,forwordLagency=.01,backwordLagency=0):
         battleSleep(forwordLagency)
@@ -231,7 +233,7 @@ class Check:
         battleSleep(backwordLagency)
     def compare(self,img,rect=(0,0,1920,1080),delta=.05):return delta>cv2.minMaxLoc(cv2.matchTemplate(self.im[rect[1]:rect[3],rect[0]:rect[2]],img,cv2.TM_SQDIFF_NORMED))[0]and fuse.reset()
     def select(self,img,rect=(0,0,1920,1080)):return(lambda x:x.index(min(x)))([cv2.minMaxLoc(cv2.matchTemplate(self.im[rect[1]:rect[3],rect[0]:rect[2]],i,cv2.TM_SQDIFF_NORMED))[0]for i in img])
-    def tapOnCmp(self,img,rect=(0,0,1920,1080),delta=.05):return(lambda loc:loc[0]<delta and(base.touch((rect[0]+loc[2][0]+(img.shape[1]>>1),rect[1]+loc[2][1]+(img.shape[0]>>1))),fuse.reset())[1])(cv2.minMaxLoc(cv2.matchTemplate(self.im[rect[1]:rect[3],rect[0]:rect[2]],img,cv2.TM_SQDIFF_NORMED)))
+    def tap(self,img,rect=(0,0,1920,1080),delta=.05):return(lambda loc:loc[0]<delta and(base.touch((rect[0]+loc[2][0]+(img.shape[1]>>1),rect[1]+loc[2][1]+(img.shape[0]>>1))),fuse.reset())[1])(cv2.minMaxLoc(cv2.matchTemplate(self.im[rect[1]:rect[3],rect[0]:rect[2]],img,cv2.TM_SQDIFF_NORMED)))
     def save(self,name=''):
         cv2.imwrite(time.strftime('%Y-%m-%d_%H.%M.%S',time.localtime())+'.jpg'if name==''else name,self.im)
         return self
@@ -259,7 +261,6 @@ class Check:
     def getPortrait(self):return[self.im[640:740,195+480*i:296+480*i]for i in range(3)]
     def getStage(self):return self.select(IMG_STAGE,(1296,20,1342,56))+1
     def getStageTotal(self):return self.select(IMG_STAGETOTAL,(1325,20,1372,56))+1
-check=None
 def gacha():
     while fuse.value<30:
         if Check(.1).isGacha():doit('MK',(200,2700))
@@ -292,7 +293,7 @@ def chooseFriend():
     while True:
         timer=time.time()
         while not Check(.2,.1).isListEnd((1860,1064)):
-            for i in(i[0] for i in friendImg.items()if check.tapOnCmp(i[1],delta=.015)):
+            for i in(i[0] for i in friendImg.items()if check.tap(i[1],delta=.015)):
                 skillInfo[friendPos],houguInfo[friendPos]=(lambda r:(lambda p:([[skillInfo[friendPos][i][j]if p[i*3+j]=='x'else int(p[i*3+j])for j in range(3)]for i in range(3)],[houguInfo[friendPos][i]if p[i]=='x'else int(p[i])for i in range(9,11)]))(r.group())if r else(skillInfo[friendPos],houguInfo[friendPos]))(re.search('[0-9x]{11}$',i))
                 return logger.info(f'Friend {i}')
             base.swipe((400,900,400,300))
