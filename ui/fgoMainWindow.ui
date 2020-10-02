@@ -3397,6 +3397,7 @@
     </property>
     <addaction name="MENU_SCRIPT_GACHA"/>
     <addaction name="MENU_SCRIPT_JACKPOT"/>
+    <addaction name="MENU_SCRIPT_MAILFILTER"/>
    </widget>
    <widget class="QMenu" name="MENU_CONTROL">
     <property name="title">
@@ -3528,6 +3529,17 @@
   <action name="MENU_SCRIPT_JACKPOT">
    <property name="text">
     <string>抽奖池</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI Light</family>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="MENU_SCRIPT_MAILFILTER">
+   <property name="text">
+    <string>领购粮</string>
    </property>
    <property name="font">
     <font>
@@ -3994,6 +4006,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MENU_SCRIPT_MAILFILTER</sender>
+   <signal>triggered()</signal>
+   <receiver>fgoMainWindow</receiver>
+   <slot>runMailFiltering()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>313</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <designerdata>
   <property name="gridDeltaX">
@@ -4035,6 +4063,7 @@
   <slot>cmdHere()</slot>
   <slot>stopAfterBattle()</slot>
   <slot>runJackpot()</slot>
+  <slot>runMailFiltering()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="BTG_FRIEND"/>

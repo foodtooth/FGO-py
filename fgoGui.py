@@ -253,6 +253,7 @@ class MyMainWindow(QMainWindow):
     def runUser(self):self.runFunc(fgoFunc.userScript)
     def runGacha(self):self.runFunc(fgoFunc.gacha)
     def runJackpot(self):self.runFunc(fgoFunc.jackpot)
+    def runMailFiltering(self):self.runFunc(fgoFunc.mailFiltering)
     def runMain(self):
         text,ok=QInputDialog.getItem(self,'肝哪个','在下拉列表中选择战斗函数',['battle','userScript'])
         if ok and text:self.runFunc(fgoFunc.main,self.ui.TXT_APPLE.value(),self.ui.CBX_APPLE.currentIndex(),eval('fgoFunc.'+text))
