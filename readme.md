@@ -94,6 +94,8 @@ mumu模拟器用户请换模拟器~~或者自己把v4.0.0版本里面的fgoFunc.
 |\<Space\> |选卡/下一步/菜单                        |
 |NUM4-9    |选取敌人,NUM7返回/关闭                  |  
 ## 如何联系我 Contact Me
+![img](./doc/contact.png)  
+在占用我的时间之前,先耗费自己的时间  
 ![Alipay](./doc/行行好吧给颗石头吧.png)![Wechat](./doc/吧头石颗给吧好行行.png)  
 觉得有帮助请为我star,谢谢  
 [提问的智慧 How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html)([zh_CN](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md))  
