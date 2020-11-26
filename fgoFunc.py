@@ -315,7 +315,7 @@ def chooseFriend():
                 return logger.info(f'Friend {i}')
             if check.isListEnd((1860,1064)):break
             base.swipe((800,900,800,300))
-            Check(.25)
+            Check(.3)
         if refresh:battleSleep(max(0,timer+10-time.time()))
         doit('\xBAJ',(500,1000))
         refresh=True
