@@ -348,6 +348,11 @@ def battle():
                         doit(('TYUIOP'[masterSkill[2][2]-1],'TYUIOP'[masterSkill[2][3]-1],'Z'),(300,300,2600))
                         orderChange[servant[masterSkill[2][2]-1]],orderChange[max(servant)+masterSkill[2][3]-3]=orderChange[max(servant)+masterSkill[2][3]-3],orderChange[servant[masterSkill[2][2]-1]]
                         while not Check(.2).isTurnBegin():pass
+                        for i,j in((i,j)for i in [masterSkill[2][2]-1]if servant[i]<6for j in range(3)if skill[i][j]and skillInfo[orderChange[servant[i]]][j][0]and min(skillInfo[orderChange[servant[i]]][j][0],stageTotal)<<8|skillInfo[orderChange[servant[i]]][j][1]<=stage<<8|stageTurn):
+                            doit(('ASD','FGH','JKL')[i][j],(300,))
+                            if skillInfo[orderChange[servant[i]]][j][2]:doit('234'[skillInfo[orderChange[servant[i]]][j][2]-1],(300,))
+                            battleSleep(2.3)
+                            while not Check(0,.2).isTurnBegin():pass
                         portrait=Check(.4).getPortrait()
                         continue
                     else:doit('234'[masterSkill[i][2]-1],(300,))
