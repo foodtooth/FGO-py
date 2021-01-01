@@ -222,6 +222,7 @@ class Base(Android):
         lvd=numpy.linalg.norm(vd)
         vd/=.2*self.scale*lvd
         vx=numpy.array([0.,0.])
+        # def send(method,pos):self.minitouch.safe_send(' '.join((method,'0',*[str(int(i))for i in self.minitouch.transform_xy(*pos)],'50\nc\n')))
         def send(method,pos):self.maxtouch.safe_send(' '.join((method,'0',*[str(i)for i in self.maxtouch.transform_xy(*pos)],'50\nc\n')))
         send('d',p1)
         time.sleep(.01)
@@ -260,24 +261,23 @@ class Check:
         cv2.imwrite(time.strftime('%Y-%m-%d_%H.%M.%S',time.localtime())+'.jpg'if name==''else name,self.im)
         return self
     def show(self):
-        cv2.imshow('Check',cv2.resize(self.im,(0,0),None,.4,.4,cv2.INTER_NEAREST))
-        cv2.waitKey()
-        cv2.destroyAllWindows()
+        cv2.imshow('Check Screenshot - Press S to save',cv2.resize(self.im,(0,0),None,.4,.4,cv2.INTER_NEAREST))
+        if cv2.waitKey()==ord('s'):self.save()
         return self
     def isAddFriend(self):return self.compare(IMG_END,(243,863,745,982))
     def isApEmpty(self):return self.compare(IMG_APEMPTY,(906,897,1017,967))
     def isBattleBegin(self):return self.compare(IMG_BATTLEBEGIN,(1673,959,1899,1069))
     def isBattleContinue(self):return self.compare(IMG_BATTLECONTINUE,(1072,805,1441,895))
     def isBattleFailed(self):return self.compare(IMG_FAILED,(277,406,712,553))
-    def isBattleFinished(self):return(self.compare(IMG_BOUND,(95,235,460,318))or self.compare(IMG_BOUNDUP,(978,517,1491,596)))
+    def isBattleFinished(self):return(self.compare(IMG_BOUND,(112,250,454,313))or self.compare(IMG_BOUNDUP,(987,485,1468,594)))
     def isBegin(self):return self.compare(IMG_BEGIN,(1630,950,1919,1079))
     def isChooseFriend(self):return self.compare(IMG_CHOOSEFRIEND,(1628,314,1772,390))
     def isGacha(self):return self.compare(IMG_GACHA,(973,960,1312,1052))
-    def isHouguReady(self):return(lambda im:[not any(self.compare(j,(470+346*i,258,768+346*i,387),.3)for j in(IMG_HOUGUSEALED,IMG_CARDSEALED))and(numpy.mean(self.im[1014:1021,217+480*i:235+480*i])>90or numpy.mean(im[1014:1021,217+480*i:235+480*i])>90)for i in range(3)])(Check(.7).im)
+    def isHouguReady(self):return[not any(self.compare(j,(470+346*i,258,768+346*i,387),.3)for j in(IMG_HOUGUSEALED,IMG_CARDSEALED))and(numpy.mean(self.im[1019:1026,217+478*i:235+478*i])>55or numpy.mean(Check(.2).im[1019:1026,217+478*i:235+478*i])>55)for i in range(3)]
     def isListEnd(self,pos):return any(self.compare(i,(pos[0]-30,pos[1]-20,pos[0]+30,pos[1]+1),.25)for i in(IMG_LISTEND,IMG_LISTNONE))
     def isNextJackpot(self):return self.compare(IMG_JACKPOT,(1556,336,1859,397))
     def isNoFriend(self):return self.compare(IMG_NOFRIEND,(369,545,1552,797),.1)
-    def isSkillReady(self):return[[not self.compare(IMG_STILL,(65+480*i+141*j,895,107+480*i+141*j,927),.1)for j in range(3)]for i in range(3)]
+    def isSkillReady(self):return[[not self.compare(IMG_STILL,(54+476*i+132*j,897,83+480*i+141*j,927),.1)for j in range(3)]for i in range(3)]
     def isTurnBegin(self):return self.compare(IMG_ATTACK,(1567,932,1835,1064))
     def getABQ(self):return[-1if self.compare(IMG_CARDSEALED,(43+386*i,667,345+386*i,845),.3)else(lambda x:x.index(max(x)))([numpy.mean(self.im[771:919,108+386*i:318+386*i,j])for j in(2,1,0)])for i in range(5)]
     def getPartyIndex(self):return cv2.minMaxLoc(cv2.matchTemplate(self.im[58:92,768:1152],IMG_PARTYINDEX,cv2.TM_SQDIFF_NORMED))[2][0]//37+1
@@ -408,4 +408,4 @@ def userScript():
     # doit('S2DF2GH2J2KL2QE2 654',(350,3000,3000,350,3000,3000,350,3000,350,3000,3000,350,3000,300,350,3000,2400,350,350,10000))
     # while not Check(0,.2).isBattleFinished():assert not check.isTurnBegin()
     # return True
-    chooseFriend()
+    print(Check().isSkillReady(),check.isHouguReady())
